@@ -21,7 +21,7 @@ def plot_frequency_response_direct(w, H, fig=None, axs=None, color='b'):
         fig,axs = plt.subplots(2, 1, figsize=(10, 8))
     
     # Magnitude da resposta em frequência (em dB)
-    axs[0].plot(w / np.pi, 20 * np.log10(np.abs(H)), color, label="Filtro FIR")
+    axs[0].plot(w / np.pi, 20 * np.log10(np.abs(H)), color=color, label="Filtro FIR")
     axs[0].set_xlim(0, 1)
 
     axs[0].set_title('Magnitude da Resposta em Frequência (dB)')
@@ -30,7 +30,7 @@ def plot_frequency_response_direct(w, H, fig=None, axs=None, color='b'):
     axs[0].grid()
 
     # Resposta em frequência em amplitude linear
-    axs[1].plot(w / np.pi, np.abs(H), color)
+    axs[1].plot(w / np.pi, np.abs(H), color=color)
     axs[1].set_xlim(0, 1)
 
     axs[1].set_title('Magnitude da Resposta em Frequência (Linear)')
