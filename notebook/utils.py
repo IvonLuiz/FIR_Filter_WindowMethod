@@ -15,27 +15,29 @@ def plot_impulse_response(M, h):
     plt.show()
 
 
-def plot_frequency_response_direct(w, H):
-    # Plotando a resposta em frequência do filtro
-    plt.figure(figsize=(6, 6))
-
-    # Magnitude da resposta em frequência
-    plt.subplot(2, 1, 1)
-    plt.plot(w / np.pi, 20 * np.log10(np.abs(H)), 'b')
-    plt.title('Resposta em Frequência do Filtro FIR utilizando Janela de Kaiser')
-    plt.xlabel('Frequência Normalizada (π radianos)')
-    plt.ylabel('Amplitude (dB)')
-    plt.grid()
+def plot_frequency_response_direct(w, H, fig=None, axs=None, color='b'):
+    # Criando a figura e os subplots caso não tenham sido passados
+    if fig is None or axs is None:
+        fig, axs = plt.subplots(2, 1, figsize=(10, 10))
+    
+    # Magnitude da resposta em frequência (em dB)
+    axs[0].plot(w / np.pi, 20 * np.log10(np.abs(H)), color)
+    axs[0].set_title('Magnitude da Resposta em Frequência (dB)')
+    axs[0].set_xlabel('Frequência Normalizada (π radianos)')
+    axs[0].set_ylabel('Amplitude (dB)')
+    axs[0].grid()
 
     # Resposta em frequência em amplitude linear
-    plt.subplot(2, 1, 2)
-    plt.plot(w / np.pi, np.abs(H), 'b')
-    plt.xlabel('Frequência Normalizada (π radianos)')
-    plt.ylabel('Amplitude')
-    plt.grid()
+    axs[1].plot(w / np.pi, np.abs(H), color)
+    axs[1].set_title('Magnitude da Resposta em Frequência (Linear)')
+    axs[1].set_xlabel('Frequência Normalizada (π radianos)')
+    axs[1].set_ylabel('Amplitude')
+    axs[1].grid()
 
+    # Ajustando o layout
     plt.tight_layout()
-    plt.show()
+
+    return axs
 
 
 def plot_frequency_response_cascade(w_cascade, wc, H_cascade, H):
