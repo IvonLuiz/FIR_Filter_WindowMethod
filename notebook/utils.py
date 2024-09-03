@@ -72,46 +72,50 @@ def plot_approximation_error(w, error, color="black"):
     plt.title('Erro de Aproximação $E_A(\omega)$')
     plt.xlabel(r'Frequência Normalizada ($\omega/\pi$)')
     plt.ylabel(r'$E_A(\omega)$ - Erro de Aproximação')
-    plt.grid(True)
+    plt.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
     plt.show()
 
 
-def plot_phase_response(w, h, fig=None, axs=None, color="black", legend=None):
+def plot_phase_response(w, h, fig=None, axs=None, unit='degrees', color="black"):
     if fig is None or axs is None:
         fig, axs = plt.subplots(figsize=(6, 4))
 
     # Fase da resposta em frequência
     phase = np.angle(h)
+    angles = np.unwrap(phase)
     
-    axs.plot(w, phase, color=color, linewidth=2.0, linestyle='-', label=legend)
+    if unit == 'degrees':
+        angles = np.degrees(angles)
+        ylabel = 'Fase [degraus]'
+    else:
+        angles = angles
+        ylabel = 'Fase [radianos]'
+
+    axs.plot(w, angles, color=color, linewidth=2.0, linestyle='-')
     axs.set_xlim(0, 1)
     axs.set_title('Resposta em Fase')
-    axs.set_xlabel(r"Frequência Normalizada ($\omega$) [$\pi$ rad/s]")
-    axs.set_ylabel('Fase [rad]')
+    axs.set_xlabel(r"Frequência ($\omega/) [rad/s]")
+    axs.set_ylabel(ylabel)
     axs.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
-    axs.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1.0], ['0', '0.2π', '0.4π', '0.6π', '0.8π', 'π'])
-
-    if legend is not None:
-        axs.legend()
+    axs.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1.0], 
+                   ['0', '0.2π', '0.4π', '0.6π', '0.8π', 'π'])
 
     plt.tight_layout()
     return axs
 
 
-def plot_group_delay(w, group_delay, fig=None, axs=None, color="black", legend=None):
+def plot_group_delay(w, group_delay, fig=None, axs=None, color="black"):
     if fig is None or axs is None:
         fig, axs = plt.subplots(figsize=(6, 4))
 
-    axs.plot(w / np.pi, group_delay, color=color, linewidth=2.0, linestyle='-', label=legend)
+    axs.plot(w / np.pi, group_delay, color=color, linewidth=2.0, linestyle='-')
     axs.set_xlim(0, 1)
     axs.set_title('Atraso de Grupo')
-    axs.set_xlabel(r"Frequência Normalizada ($\omega$) [$\pi$ rad/s]")
+    axs.set_xlabel(r"Frequência ($\omega$) [rad/s]")
     axs.set_ylabel('Atraso de Grupo [s]')
     axs.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
-    axs.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1.0], ['0', '0.2π', '0.4π', '0.6π', '0.8π', 'π'])
-
-    if legend is not None:
-        axs.legend()
+    axs.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1.0], 
+                   ['0', '0.2π', '0.4π', '0.6π', '0.8π', 'π'])
 
     plt.tight_layout()
     return axs
