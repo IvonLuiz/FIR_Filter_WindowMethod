@@ -1,17 +1,20 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_impulse_response(M, h):
-    # Resposta impulsiva do filtro
-    n = np.arange(len(h))
 
-    # Resposta impulsiva do filtro
-    plt.figure(figsize=(8, 5))
-    plt.stem(n - (M - 1) // 2, h, basefmt='b-')
-    plt.xlabel("n", fontsize=16)
-    plt.ylabel("Amplitude", fontsize=16)
-    plt.title("Resposta Impulsiva do Filtro", fontsize=18)
-
+# Função para plotar a resposta ao impulso
+def plot_impulse_response(N, filter_h):
+    plt.figure(figsize=(10, 6))
+    plt.stem(range(N), filter_h, basefmt=" ") 
+    plt.title('Resposta ao Impulso do Filtro FIR')
+    plt.xlabel('Amostra')
+    plt.ylabel('Amplitude')
+    plt.xlim(0, N)
+    # Desativa a grade padrão
+    plt.grid(False)
+    # Adiciona uma linha de grade manualmente na posição zero
+    plt.axhline(0, color='black', linestyle='-', linewidth=0.5)
+    plt.show()
 
 
 def plot_frequency_response(w, h, wc=None, attenuation=None, fig=None, axs=None, color="black", legend=True, return_axs=False):
@@ -84,11 +87,10 @@ def plot_phase_response(w, h, fig=None, axs=None, unit='degrees', color="black")
     phase = np.angle(h)
     angles = np.unwrap(phase)
     
-    if unit == 'degrees':
+    if unit == "degrees":
         angles = np.degrees(angles)
-        ylabel = 'Fase [degraus]'
-    else:
-        angles = angles
+        ylabel = 'Fase [graus]'
+    elif unit == "rad":
         ylabel = 'Fase [radianos]'
 
     axs.plot(w, angles, color=color, linewidth=2.0, linestyle='-')
@@ -119,3 +121,19 @@ def plot_group_delay(w, group_delay, fig=None, axs=None, color="black"):
 
     plt.tight_layout()
     return axs
+
+
+def plot_frequency_and_phase_response(w, h, wc=None, attenuation=None, color="black", legend=True, return_axs=False):
+    fig, axs = plt.subplots(3, 1, figsize=(6, 10))
+
+    # Chama a função para plotar a resposta em frequência
+    plot_frequency_response(w, h, wc=wc, attenuation=attenuation, fig=fig, axs=axs, color=color, legend=legend, return_axs=False)
+
+    # Chama a função para plotar a resposta em fase no terceiro subplot
+    plot_phase_response(w, h, fig=fig, axs=axs[2], color=color)
+
+    plt.tight_layout()
+    plt.show()
+    
+    if return_axs == True:
+        return axs
