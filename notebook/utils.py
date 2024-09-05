@@ -6,6 +6,18 @@ def pi_multiples_scale():
             ['0', '0.2π', '0.4π', '0.6π', '0.8π', 'π'])
 
 
+def plot_zeros(zeros, legend=False):
+    plt.figure(figsize=(6, 5))
+    plt.title('Plano Z: Filtro digital')
+    plt.scatter(np.real(zeros), np.imag(zeros), marker='o', color='tab:blue', label='Zeros')
+    plt.plot(np.cos(np.linspace(0, 2 * np.pi, 100)), np.sin(np.linspace(0, 2 * np.pi, 100)), color='black', linestyle='-', label='Círculo Unitário')
+    plt.xlabel('$Re$')
+    plt.ylabel('$Im$')
+    if legend==True:
+        plt.legend()
+    plt.grid(True)
+
+
 def plot_impulse_response(N, filter_h):
     plt.figure(figsize=(10, 6))
     plt.stem(range(N), filter_h, basefmt=" ") 
@@ -65,8 +77,7 @@ def plot_frequency_response(w, h, wc=None, attenuation=None, fig=None, axs=None,
 
     if return_axs == True:
         return axs
-    else: 
-        return None 
+    
 
 
 # Função para plotar o erro de aproximação
@@ -77,6 +88,7 @@ def plot_approximation_error(w, error, color="black"):
     plt.xlabel(r'Frequência Normalizada ($\omega$)')
     plt.ylabel(r'$E_A(\omega)$ - Erro de Aproximação')
     plt.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
+    plt.xlim(0, 1)
     plt.xticks(*pi_multiples_scale())
 
     plt.show()
