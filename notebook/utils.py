@@ -32,52 +32,56 @@ def plot_impulse_response(N, filter_h):
     plt.show()
 
 
-def plot_frequency_response(w, h, wc=None, attenuation=None, fig=None, axs=None, color="black", legend=True, return_axs=False):
+def plot_magnitude_response_db(w, h, axs=None, color="black", wc=None, attenuation=None, legend=True, label="Filtro FIR"):
+    if axs is None:
+        fig, axs = plt.subplots(1, 1, figsize=(6, 8))
     
-    if fig is None or axs is None:
-        fig, axs = plt.subplots(2, 1, figsize=(6, 8))
-    
-    # Magnitude da resposta em frequência (em dB)
-    axs[0].plot(w, 20 * np.log10(np.abs(h)), color=color, linewidth=2.0, linestyle='-', label="Filtro FIR")
-    axs[0].set_xlim(0, 1)
+    axs.plot(w, 20 * np.log10(np.abs(h)), color=color, linewidth=2.0, linestyle='-', label=label)
+    axs.set_xlim(0, 1)
+    axs.set_title('Magnitude da Resposta em Frequência (dB)')
+    axs.set_xlabel(r"Frequência ($\omega$) [rad/s]")
+    axs.set_ylabel(r"$|H(e^{j\omega})|$ - Amplitude [dB]")
+    axs.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
+    axs.set_xticks(*pi_multiples_scale())
 
-    axs[0].set_title('Magnitude da Resposta em Frequência (dB)')
-    axs[0].set_xlabel(r"Frequência ($\omega$) [rad/s]")
-    axs[0].set_ylabel(r"$|H(e^{j\omega})|$ - Amplitude [dB]")
-    axs[0].grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
-    
-    # Configurações do eixo x para mostrar múltiplos de pi
-    axs[0].set_xticks(*pi_multiples_scale())
-
-
-    # Magnitude da resposta em frequência (linear)
-    axs[1].plot(w, np.abs(h), color=color, linewidth=2.0, linestyle='-')
-    axs[1].set_xlim(0, 1)
-    axs[1].set_title('Magnitude da Resposta em Frequência (Linear)')
-    axs[1].set_xlabel(r"Frequência ($\omega$) [rad/s]")
-    axs[1].set_ylabel('Magnitude')
-    axs[1].set_ylabel(r"$|H(e^{j\omega})|$ - Magnitude")
-    axs[1].grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
-    axs[1].set_xticks(*pi_multiples_scale())
-
-    
-    # Se wc foi fornecido, desenhe a linha de frequência de corte
     if wc is not None:
-        axs[0].axvline(wc, color='red', linestyle='--', linewidth=2.0, label='Frequência de Corte')
-        axs[1].axvline(wc, color='red', linestyle='--', linewidth=2.0, label='Frequência de Corte')
-
-    # Se attenuation foi fornecido, desenhe a linha de atenuação
+        axs.axvline(wc, color='red', linestyle='--', linewidth=2.0, label='Frequência de Corte')
     if attenuation is not None:
-        axs[0].axhline(-attenuation, color='blue', linestyle=':', linewidth=2.0, label=f'Atenuação ({attenuation} dB)')
-
-    if legend == True:
-        axs[0].legend() 
+        axs.axhline(-attenuation, color='blue', linestyle=':', linewidth=2.0, label=f'Atenuação ({attenuation} dB)')
     
+    if legend:
+        axs.legend()
+
+def plot_magnitude_response_linear(w, h, axs=None, color="black", wc=None):
+    if axs is None:
+        fig, axs = plt.subplots(1, 1, figsize=(6, 8))
+    
+    axs.plot(w, np.abs(h), color=color, linewidth=2.0, linestyle='-')
+    axs.set_xlim(0, 1)
+    axs.set_title('Magnitude da Resposta em Frequência (Linear)')
+    axs.set_xlabel(r"Frequência ($\omega$) [rad/s]")
+    axs.set_ylabel(r"$|H(e^{j\omega})|$ - Magnitude")
+    axs.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
+    axs.set_xticks(*pi_multiples_scale())
+
+    if wc is not None:
+        axs.axvline(wc, color='red', linestyle='--', linewidth=2.0, label='Frequência de Corte')
+
+
+def plot_frequency_response(w, h, wc=None, attenuation=None, axs=None, color="black", legend=True, return_axs=False):
+    if axs is None:
+        fig, axs = plt.subplots(2, 1, figsize=(6, 8))
+
+    # Plotar a magnitude em dB
+    plot_magnitude_response_db(w, h, axs[0], color=color, wc=wc, attenuation=attenuation, legend=legend)
+
+    # Plotar a magnitude linear
+    plot_magnitude_response_linear(w, h, axs[1], color=color, wc=wc)
+
     plt.tight_layout()
 
-    if return_axs == True:
+    if return_axs:
         return axs
-    
 
 
 # Função para plotar o erro de aproximação
@@ -94,8 +98,8 @@ def plot_approximation_error(w, error, color="black"):
     plt.show()
 
 
-def plot_phase_response(w, h, fig=None, axs=None, unit='degrees', color="black"):
-    if fig is None or axs is None:
+def plot_phase_response(w, h, axs=None, unit='degrees', color="black"):
+    if axs is None:
         fig, axs = plt.subplots(figsize=(6, 4))
 
     # Fase da resposta em frequência
@@ -120,8 +124,8 @@ def plot_phase_response(w, h, fig=None, axs=None, unit='degrees', color="black")
     return axs
 
 
-def plot_group_delay(w, group_delay, fig=None, axs=None, color="black"):
-    if fig is None or axs is None:
+def plot_group_delay(w, group_delay, axs=None, color="black"):
+    if axs is None:
         fig, axs = plt.subplots(figsize=(6, 4))
 
     axs.plot(w / np.pi, group_delay, color=color, linewidth=2.0, linestyle='-')
@@ -138,12 +142,10 @@ def plot_group_delay(w, group_delay, fig=None, axs=None, color="black"):
 
 def plot_frequency_and_phase_response(w, h, wc=None, attenuation=None, color="black", legend=True, return_axs=False):
     fig, axs = plt.subplots(3, 1, figsize=(6, 10))
+    
+    plot_frequency_response(w, h, wc=wc, attenuation=attenuation, axs=axs, color=color, legend=legend, return_axs=False)
 
-    # Chama a função para plotar a resposta em frequência
-    plot_frequency_response(w, h, wc=wc, attenuation=attenuation, fig=fig, axs=axs, color=color, legend=legend, return_axs=False)
-
-    # Chama a função para plotar a resposta em fase no terceiro subplot
-    plot_phase_response(w, h, fig=fig, axs=axs[2], color=color)
+    plot_phase_response(w, h, axs=axs[2], color=color)
 
     plt.tight_layout()
     plt.show()
