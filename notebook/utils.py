@@ -140,15 +140,20 @@ def plot_group_delay(M, w):
     plt.show()
 
 
-def plot_frequency_and_phase_response(w, h, wc=None, attenuation=None, color="black", legend=True, return_axs=False):
+def plot_frequency_and_phase_response(w, h, wc=None, attenuation=None, color="black", legend=True, return_axs=False, title=""):
     fig, axs = plt.subplots(3, 1, figsize=(6, 10))
     
+    # Adicionar o título geral da figura
+    fig.suptitle(title, fontsize=16)
+
+    # Adicionar a resposta em frequência
     plot_frequency_response(w, h, wc=wc, attenuation=attenuation, axs=axs, color=color, legend=legend, return_axs=False)
 
+    # Adicionar a resposta de fase
     plot_phase_response(w, h, axs=axs[2], color=color)
 
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])  # Ajuste para não sobrepor o título geral
     plt.show()
 
-    if return_axs == True:
+    if return_axs:
         return axs
