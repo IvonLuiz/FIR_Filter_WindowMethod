@@ -124,20 +124,20 @@ def plot_phase_response(w, h, axs=None, unit='degrees', color="black"):
     return axs
 
 
-def plot_group_delay(w, group_delay, axs=None, color="black"):
-    if axs is None:
-        fig, axs = plt.subplots(figsize=(6, 4))
+def plot_group_delay(M, w):
+    # Atraso de grupo constante para um filtro FIR simétrico
+    tau_g = M / 2 * np.ones_like(w)
 
-    axs.plot(w / np.pi, group_delay, color=color, linewidth=2.0, linestyle='-')
-    axs.set_xlim(0, 1)
-    axs.set_title('Atraso de Grupo')
-    axs.set_xlabel(r"Frequência ($\omega$) [rad/s]")
-    axs.set_ylabel('Atraso de Grupo [s]')
-    axs.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
-    axs.set_xticks(*pi_multiples_scale())
-
-    plt.tight_layout()
-    return axs
+    plt.figure(figsize=(6, 4))
+    plt.plot(w, tau_g, color="blue", linewidth=2.0)
+    plt.title('Atraso de Grupo $\\tau_g(\\omega)$')
+    plt.xlabel(r'Frequência Normalizada ($\omega/\pi$)')
+    plt.ylabel('Atraso de Grupo [amostras]')
+    plt.ylim([0, M])
+    plt.xlim([0, 1])
+    plt.grid(True, which='both', linestyle='-', linewidth=0.2, alpha=0.6, color='black')
+    plt.xticks(*pi_multiples_scale())
+    plt.show()
 
 
 def plot_frequency_and_phase_response(w, h, wc=None, attenuation=None, color="black", legend=True, return_axs=False):
